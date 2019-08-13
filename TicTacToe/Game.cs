@@ -4,8 +4,9 @@
 
     public class Game
     {
+        private const char NoSymbol = ' ';
         private readonly Board _board = new Board();
-        private char _lastSymbol = ' ';
+        private char _lastSymbol = NoSymbol;
 
         public void Play(char symbol, int rowIndex, int columnIndex)
         {
@@ -19,45 +20,39 @@
 
         public char Winner()
         {
-            //if the positions in first row are taken
-            if (_board.TileAt(0, 0).Symbol != ' ' &&
-                _board.TileAt(0, 1).Symbol != ' ' &&
-                _board.TileAt(0, 2).Symbol != ' ')
-                //if first row is full with same symbol
-                if (_board.TileAt(0, 0).Symbol ==
-                    _board.TileAt(0, 1).Symbol &&
-                    _board.TileAt(0, 2).Symbol ==
-                    _board.TileAt(0, 1).Symbol)
+            if (VerifyCellsNotEmptyIn(0))
+                if (VerifyCellsAreSameIn(0))
                     return _board.TileAt(0, 0).Symbol;
 
-            //if the positions in first row are taken
-            if (_board.TileAt(1, 0).Symbol != ' ' &&
-                _board.TileAt(1, 1).Symbol != ' ' &&
-                _board.TileAt(1, 2).Symbol != ' ')
-                //if middle row is full with same symbol
-                if (_board.TileAt(1, 0).Symbol ==
-                    _board.TileAt(1, 1).Symbol &&
-                    _board.TileAt(1, 2).Symbol ==
-                    _board.TileAt(1, 1).Symbol)
+            if (VerifyCellsNotEmptyIn(1))
+                if (VerifyCellsAreSameIn(1))
                     return _board.TileAt(1, 0).Symbol;
 
-            //if the positions in first row are taken
-            if (_board.TileAt(2, 0).Symbol != ' ' &&
-                _board.TileAt(2, 1).Symbol != ' ' &&
-                _board.TileAt(2, 2).Symbol != ' ')
-                //if middle row is full with same symbol
-                if (_board.TileAt(2, 0).Symbol ==
-                    _board.TileAt(2, 1).Symbol &&
-                    _board.TileAt(2, 2).Symbol ==
-                    _board.TileAt(2, 1).Symbol)
+            if (VerifyCellsNotEmptyIn(2))
+                if (VerifyCellsAreSameIn(2))
                     return _board.TileAt(2, 0).Symbol;
 
-            return ' ';
+            return NoSymbol;
+        }
+
+        private bool VerifyCellsNotEmptyIn(int rowIndex)
+        {
+            return _board.TileAt(rowIndex, 0).Symbol != NoSymbol &&
+                   _board.TileAt(rowIndex, 1).Symbol != NoSymbol &&
+                   _board.TileAt(rowIndex, rowIndex).Symbol != NoSymbol;
+        }
+
+        private bool VerifyCellsAreSameIn(int rowIndex)
+        {
+            return _board.TileAt(rowIndex, 0).Symbol ==
+                   _board.TileAt(rowIndex, 1).Symbol &&
+                   _board.TileAt(rowIndex, 2).Symbol ==
+                   _board.TileAt(rowIndex, 1).Symbol;
         }
 
         private void EnsureValidPosition(int x, int y)
         {
-            if (_board.TileAt(x, y).Symbol != ' ')
+            if (_board.TileAt(x, y).Symbol != NoSymbol)
             {
                 throw new Exception("Invalid position");
             }
@@ -73,7 +68,7 @@
 
         private void EnsureFirstPlayerIsX(char symbol)
         {
-            if (_lastSymbol == ' ' && symbol == 'O')
+            if (_lastSymbol == NoSymbol && symbol == 'O')
             {
                 throw new Exception("Invalid first player");
             }
